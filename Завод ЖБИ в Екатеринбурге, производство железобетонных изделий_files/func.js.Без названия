@@ -1,0 +1,103 @@
+$(document).ready(function() {
+  $("#city_select").live("change", function(e) {
+    $.cookie("uss_city_select", $(this).val(), {
+      path: "/"
+    });
+    $(".city_contacts").find("." + $(this).val()).addClass("active").siblings("div.city_number").removeClass("active")
+  });
+  if ($.cookie("uss_city_select")) {
+    $("select#city_select").val($.cookie("uss_city_select"));
+    $(".city_contacts").find("." + $.cookie("uss_city_select")).addClass("active").siblings("div.city_number").removeClass("active")
+  } else {
+    $(".city_contacts").find("div.city_number").eq(1).addClass("active").siblings("div.city_number").removeClass("active");
+    $("select#city_select").val("ekb")
+  }
+  var form_element_type_1 = $('select, input[type="checkbox"], input[type="radio"]'),
+    form_element_type_2 = $('input[type="text"], input[type="submit"], input[type="number"], input[type="password"], input[type="tel"], textarea, button');
+  if (form_element_type_1.length > 0) {
+    form_element_type_1.styler()
+  }
+  form_element_type_2.addClass("styler");
+  var menu_block_width = $(".top_menu").width();
+  var menu_item = $(".top_menu").eq(0).children("ul").children("li");
+  var menu_item_link = $(".top_menu").eq(0).children("ul").children("li").children("a");
+  var menu_items_count = menu_item.length;
+  var menu_itmes_width = 0;
+  $(menu_item).each(function(index, el) {
+    menu_itmes_width += $(el).children("a").outerWidth()
+  });
+  var padding_range = Math.floor((menu_block_width - menu_itmes_width) / (menu_items_count * 2));
+  menu_item.css("padding-left", padding_range).css("padding-right", padding_range);
+  if ($("#subscribeForm").length > 0) {
+    $("#subscribeForm .emailfield input").attr("placeholder", "введите ваш E-mail")
+  }
+  $(".slider .slides").slick({
+    dots: true,
+    arrows: true,
+    autoplay: true,
+    autoplaySpeed: 3500
+  })
+  $('.top_menu ul.uss_eshop_menu').appendTo('.top_menu li.store');
+//
+    $(window).on("load resize", function() {
+        if ($(window).width() <= 1000) {
+            $('.l-header .bottom_part .top_menu').insertBefore('.l-header');
+        } else {
+            $('.l-page > .top_menu').appendTo('.bottom_part');
+        }
+    });
+    $('.burger-menu').click(function () {
+        $(this).toggleClass('active');
+        $('.top_menu').slideToggle(300);
+    });
+    $(document).click(function () {
+        if ($('.burger-menu.active').length == 1) {
+            $(document).mouseup(function (e){ // событие клика по веб-документу
+                var div = $( (".top_menu") && (".burger-menu") ); // тут указываем ID элемента
+                if (!div.is(e.target) // если клик был не по нашему блоку
+                    && div.has(e.target).length === 0) { // и не по его дочерним элементам
+                    $('.burger-menu.active').removeClass('active');
+                    $('.top_menu').slideUp(400);
+                }
+            });
+        }
+    });
+	
+//to top
+    //$(window).scroll(function () {
+    $(window).on('load scroll', function() {
+        if ($(this).scrollTop() > 300) {
+            $('.to-top-btn').addClass('visible');
+        } else {
+            $('.to-top-btn').removeClass('visible');
+        }
+    });
+
+    $('.to-top-btn').click(function () {
+        $('body,html').animate({
+            scrollTop: 0
+        }, 800);
+        return false;
+    });
+//
+	$('.search-btn').click(function() {
+		$(this).toggleClass("open");
+		$('.f_top_menu .search').toggleClass("open");
+	});
+	$(window).on('load scroll resize', function() {
+		//Закрпеляем меню наверху при загрузке/ресайзе/скролле
+		TopFixed();
+    });
+	$('.modal.feedback-form').ussModal($('.callus, .request-link'));
+});
+
+function TopFixed() {
+	$scrollThreshold = $('.header-bg').outerHeight();
+	$widthThreshold = 1100;
+	if (($(window).width() <= $widthThreshold) && ($(window).scrollTop() > $scrollThreshold)) {
+		if(!$('.f_top_menu').hasClass("visible")) $('.f_top_menu').addClass("visible");
+	}
+	else {
+		$('.f_top_menu').removeClass("visible");
+	}
+}
